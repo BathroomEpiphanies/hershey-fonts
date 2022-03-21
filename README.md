@@ -32,7 +32,9 @@ files by James Hurt (see hershey-fonts.notes).
 Build and install instructions
 ------------------------------
 
-	cmake .
+    mkdir build
+    cd build
+	cmake ..
 	make
 	make test
 	sudo make install     # optional
