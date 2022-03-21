@@ -4,8 +4,6 @@
 # License: GPL-2+
 #
 
-cmake_minimum_required(VERSION 2.6)
-
 set(HERSHEY_FONTS_DIR   "${CMAKE_INSTALL_PREFIX}/share/hershey-fonts")
 
 add_definitions(-DHERSHEY_FONTS_DIR="${HERSHEY_FONTS_DIR}")

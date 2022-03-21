@@ -4,11 +4,12 @@
 # License: GPL-2+
 #
 
+cmake_minimum_required(VERSION 2.8.12)
+
 project(hershey-fonts)
 set(hershey-fonts_VERSION_MAJOR 0)
 set(hershey-fonts_VERSION_MINOR 1)
 
-cmake_minimum_required(VERSION 2.6)
 enable_testing()
 
 file(GLOB jhf_files "hershey-fonts/*.jhf")

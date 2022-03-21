@@ -4,8 +4,6 @@
 # License: GPL-2+
 #
 
-cmake_minimum_required(VERSION 2.6)
-
 include_directories (../libhersheyfont)
 link_directories (${CMAKE_BINARY_DIR}/../libhersheyfont)
 
