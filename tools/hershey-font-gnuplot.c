@@ -42,7 +42,7 @@ usage()
 "    hershey-font-gnuplot futural   'Hello World!' | gnuplot -p\n"
 "    hershey-font-gnuplot gothiceng 'Calligraphy'  | gnuplot -p\n"
 "    hershey-font-gnuplot -T 'png crop' scriptc 'Nice Text' | gnuplot > out.png\n"
-	);
+        );
 
 
 }
@@ -55,26 +55,26 @@ main( int argc, char **argv )
 
     int opt;
     while ((opt = getopt(argc, argv, "h:T:")) != -1) {
-	switch (opt) {
-	case 'h':
-	    gnuplot_height = strtoul(optarg, 0, 0);
-	    break;
-	case 'T':
-	    gnuplot_term_opts = optarg;
-	    break;
-	default: /* '?' */
-	   usage();
-	   return 1;
-	}
+        switch (opt) {
+        case 'h':
+            gnuplot_height = strtoul(optarg, 0, 0);
+            break;
+        case 'T':
+            gnuplot_term_opts = optarg;
+            break;
+        default: /* '?' */
+           usage();
+           return 1;
+        }
     }
 
     opt = argc - optind;
     if ( opt < 1 || opt > 2 ) {
-	usage();
-	return 1;
+        usage();
+        return 1;
     }
     if ( opt == 2 )
-	sample_sheet_mode = 0;
+        sample_sheet_mode = 0;
 
 
     // load a hershey_font structure either by filename or fontname
@@ -82,13 +82,13 @@ main( int argc, char **argv )
     struct hershey_font *hf;
 
     if ( strchr(fontname,'.') )
-	hf = hershey_jhf_font_load(fontname);
+        hf = hershey_jhf_font_load(fontname);
     else
-	hf = hershey_font_load(fontname);
+        hf = hershey_font_load(fontname);
 
     if ( !hf ) {
-	perror(fontname);
-	return 1;
+        perror(fontname);
+        return 1;
     }
 
     // render the text
@@ -101,20 +101,20 @@ main( int argc, char **argv )
 
     char render_text_buf[256];
     if ( sample_sheet_mode ) {
-	int i;
-	for ( i=0; i<256-32; i++ )
-	    render_text_buf[i] = i+32;
-	render_text = render_text_buf;
-	terminal_width = 16 * gnuplot_height;
-	terminal_height = 8 * gnuplot_height;
+        int i;
+        for ( i=0; i<256-32; i++ )
+            render_text_buf[i] = i+32;
+        render_text = render_text_buf;
+        terminal_width = 16 * gnuplot_height;
+        terminal_height = 8 * gnuplot_height;
     } else {
-	render_text = argv[optind++];
-	terminal_width = 16 * gnuplot_height;
-	terminal_height = gnuplot_height;
+        render_text = argv[optind++];
+        terminal_width = 16 * gnuplot_height;
+        terminal_height = gnuplot_height;
     }
 
     printf("set terminal %s size %d,%d\n",
-	    gnuplot_term_opts, terminal_width, terminal_height);
+            gnuplot_term_opts, terminal_width, terminal_height);
     printf("\n");
 
     printf("unset xtics\n");
@@ -122,14 +122,14 @@ main( int argc, char **argv )
     printf("unset border\n");
     printf("unset key\n");
     if ( sample_sheet_mode ) {
-	printf("set title \"%s\"\n", fontname );
-	printf("set size ratio 0.5\n");
-	printf("set xrange [0:%d]\n", 32*32);
-	printf("set yrange [0:%d]\n", 8*64);
+        printf("set title \"%s\"\n", fontname );
+        printf("set size ratio 0.5\n");
+        printf("set xrange [0:%d]\n", 32*32);
+        printf("set yrange [0:%d]\n", 8*64);
     } else {
-	printf("set size ratio 0.125\n");
-	printf("set xrange [0:%d]\n", 16*16);
-	printf("set yrange [0:%d]\n", 2*16);
+        printf("set size ratio 0.125\n");
+        printf("set xrange [0:%d]\n", 16*16);
+        printf("set yrange [0:%d]\n", 2*16);
     }
     printf("set style arrow 1 nohead\n" );
     printf("set style line 1 lc rgb \"black\" lw 0.5\n" );
@@ -140,47 +140,47 @@ main( int argc, char **argv )
     const char *p;
     for ( p=render_text; *p; p++ ) {
 
-	// get the character c to be rendered
-	int c = *((unsigned char *)p);
+        // get the character c to be rendered
+        int c = *((unsigned char *)p);
 
-	// get the hershey_glyph for ASCII character c
-	struct hershey_glyph *hg = hershey_font_glyph(hf, c);
+        // get the hershey_glyph for ASCII character c
+        struct hershey_glyph *hg = hershey_font_glyph(hf, c);
 
-	// check whether there actually is a glyph for this character
-	if ( hg->npaths == 0 )
-	    continue;
+        // check whether there actually is a glyph for this character
+        if ( hg->npaths == 0 )
+            continue;
 
-	// handle special placement for sample_sheet_mode
-	if ( sample_sheet_mode ) {
-	    x_render_pos = (c % 32) * 32;
-	    y_render_pos = (c / 32) * 64;
-	    y_render_pos = 8*64 - y_render_pos;
-	}
+        // handle special placement for sample_sheet_mode
+        if ( sample_sheet_mode ) {
+            x_render_pos = (c % 32) * 32;
+            y_render_pos = (c / 32) * 64;
+            y_render_pos = 8*64 - y_render_pos;
+        }
 
-	printf("#  [[ %c ]] glyph(%d) width=%u npaths=%u\n",
-			c, c, hg->width, hg->npaths);
+        printf("#  [[ %c ]] glyph(%d) width=%u npaths=%u\n",
+                        c, c, hg->width, hg->npaths);
 
-	// walk the paths-list for this glyph
-	struct hershey_path *hp;
-	short px, py;
-	for ( hp=hg->paths; hp; hp=hp->next ) {
-	    // begin draw path
-	    printf("#\t\tpath: nverts=%d\n", hp->nverts);
-	    int i;
-	    for ( i=0; i<hp->nverts; i++ ) {
-		short x = hp->verts[i].x + x_render_pos;
-		short y = hp->verts[i].y + y_render_pos;
-		if ( i > 0 )
-		    printf("set arrow from %d,%d to %d,%d as 1 ls 1\n",
-			    px, py, x, y);
-		px = x;
-		py = y;
-	    }
-	    // end draw path
-	}
+        // walk the paths-list for this glyph
+        struct hershey_path *hp;
+        short px, py;
+        for ( hp=hg->paths; hp; hp=hp->next ) {
+            // begin draw path
+            printf("#\t\tpath: nverts=%d\n", hp->nverts);
+            int i;
+            for ( i=0; i<hp->nverts; i++ ) {
+                short x = hp->verts[i].x + x_render_pos;
+                short y = hp->verts[i].y + y_render_pos;
+                if ( i > 0 )
+                    printf("set arrow from %d,%d to %d,%d as 1 ls 1\n",
+                            px, py, x, y);
+                px = x;
+                py = y;
+            }
+            // end draw path
+        }
 
-	// advance the x_render_pos by the width of this glyph
-	x_render_pos += hg->width;
+        // advance the x_render_pos by the width of this glyph
+        x_render_pos += hg->width;
     }
 
     printf("plot NaN notitle\n");

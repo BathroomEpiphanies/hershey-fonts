@@ -34,12 +34,12 @@ do
     samplesheet="$SAMPLES_DIR/$fontname.png"
     echo "generating $samplesheet" 1>&2
     $HERSHEY_FONT_GNUPLOT -T png $font \
-		| gnuplot > "$samplesheet"
+                | gnuplot > "$samplesheet"
 
     preview="$SAMPLES_DIR/$fontname-preview.png"
     echo "generating $preview" 1>&2
     $HERSHEY_FONT_GNUPLOT -T 'png crop' $font 'ABCdef@#$123' \
-		| gnuplot > "$preview"
+                | gnuplot > "$preview"
 
     echo "<A HREF=\"$samplesheet\">"
     echo "<SMALL>$fontname</SMALL><BR>"

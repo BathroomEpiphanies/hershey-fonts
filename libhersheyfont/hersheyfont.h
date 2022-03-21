@@ -20,25 +20,25 @@
 #define HERSHEYFONT_H
 
 struct hershey_vertex {
-	short			x;
-	short			y;
+    short                   x;
+    short                   y;
 };
 
 struct hershey_path {
-	struct hershey_path	*next;
-	unsigned short		nverts;
-	struct hershey_vertex	verts[];
+    struct hershey_path     *next;
+    unsigned short          nverts;
+    struct hershey_vertex   verts[];
 };
 
 struct hershey_glyph {
-	unsigned int		glyphnum;
-	unsigned short		width;
-	unsigned short		npaths;
-	struct hershey_path	*paths;
+    unsigned int            glyphnum;
+    unsigned short          width;
+    unsigned short          npaths;
+    struct hershey_path     *paths;
 };
 
 struct hershey_font {
-	struct hershey_glyph	glyphs[256];	/* indexed by ASCII value */
+    struct hershey_glyph    glyphs[256];    /* indexed by ASCII value */
 };
 
 
@@ -46,23 +46,23 @@ struct hershey_font {
 // Load Hershey fontname (e.g. "rowmans") into a new struct hershey_font.
 // The associated .jhf font file will be loaded from .../share/hershey-fonts/.
 //
-struct hershey_font *	hershey_font_load( const char *fontname );
+struct hershey_font *   hershey_font_load( const char *fontname );
 
 
 //
 // Load a Hershey font .jhf file into a new struct hershey_font.
 //
-struct hershey_font *	hershey_jhf_font_load( const char *jhffile );
+struct hershey_font *   hershey_jhf_font_load( const char *jhffile );
 
 //
 // Return a pointer to the struct hershey_glyph for ASCII character c.
 //
-struct hershey_glyph *	hershey_font_glyph( struct hershey_font *hf,
-					    unsigned char c );
+struct hershey_glyph *  hershey_font_glyph( struct hershey_font *hf,
+                                            unsigned char c );
 
 //
 // Free a hershey_font allocated by hershey_font_load or hershey_jhf_font_load.
 //
-void			hershey_font_free( struct hershey_font *hf );
+void                    hershey_font_free( struct hershey_font *hf );
 
 #endif // HERSHEYFONT_H

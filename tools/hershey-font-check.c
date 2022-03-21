@@ -25,9 +25,9 @@ int
 main( int argc, char **argv )
 {
     if ( argc != 2 ) {
-	fprintf(stderr,
-		"usage: hershey-font-check {fontname | fontfile.jhf}\n");
-	return 1;
+        fprintf(stderr,
+                "usage: hershey-font-check {fontname | fontfile.jhf}\n");
+        return 1;
     }
 
     // load a hershey_font structure either by filename or fontname
@@ -35,65 +35,65 @@ main( int argc, char **argv )
     struct hershey_font *hf;
 
     if ( strchr(fontname,'.') )
-	hf = hershey_jhf_font_load(fontname);
+        hf = hershey_jhf_font_load(fontname);
     else
-	hf = hershey_font_load(fontname);
+        hf = hershey_font_load(fontname);
 
     if ( !hf ) {
-	perror(fontname);
-	return 1;
+        perror(fontname);
+        return 1;
     }
 
     // dump all the glyph data
     int c, i;
     int errs = 0;
     for ( c=0; c<256; c++ ) {
-	// get the hershey_glyph for ASCII character c
-	struct hershey_glyph *hg = hershey_font_glyph(hf, c);
+        // get the hershey_glyph for ASCII character c
+        struct hershey_glyph *hg = hershey_font_glyph(hf, c);
 
-	// check whether there actually is a glyph for this character
-	if ( hg->npaths == 0 )
-	    continue;
+        // check whether there actually is a glyph for this character
+        if ( hg->npaths == 0 )
+            continue;
 
-	printf("  [[ %c ]] glyph(%d) width=%u npaths=%u\n",
-			c, c, hg->width, hg->npaths);
+        printf("  [[ %c ]] glyph(%d) width=%u npaths=%u\n",
+                        c, c, hg->width, hg->npaths);
 
-	// walk the paths-list for this glyph
-	struct hershey_path *hp;
-	int width_err = 0;
-	for ( hp=hg->paths; hp; hp=hp->next ) {
-	    // begin draw path
-	    printf("\t\tpath: nverts=%d\t", hp->nverts);
-	    for ( i=0; i<hp->nverts; i++ ) {
-		short x = hp->verts[i].x /* + x_render_pos */ ;
-		short y = hp->verts[i].y;
-		printf(" {%d,%d}", x, y);
+        // walk the paths-list for this glyph
+        struct hershey_path *hp;
+        int width_err = 0;
+        for ( hp=hg->paths; hp; hp=hp->next ) {
+            // begin draw path
+            printf("\t\tpath: nverts=%d\t", hp->nverts);
+            for ( i=0; i<hp->nverts; i++ ) {
+                short x = hp->verts[i].x /* + x_render_pos */ ;
+                short y = hp->verts[i].y;
+                printf(" {%d,%d}", x, y);
 #if 0
-		// Check for out-of-bounds x positions (not actually invalid).
-		if ( x < 0 || x > hg->width ) {
-		    printf( "OUT!" );
-		}
+                // Check for out-of-bounds x positions (not actually invalid).
+                if ( x < 0 || x > hg->width ) {
+                    printf( "OUT!" );
+                }
 #endif
-		// Check for rare .jhf glitch case:
-		// Any glyph listed as zero-width (same left and right bound)
-		// should be only vertical lines such that all verts should
-		// have x == 0.
-		if ( hg->width == 0 && x != 0 )
-		    width_err++;
-	    }
-	    // end draw path
-	    printf("\n");
-	}
-	if ( width_err ) {
-	    printf("\t\tWARNING! '%c' glyph(%d) likely bogus width=%d!\n",
-		    c, c, hg->width);
-	    errs++;
-	}
+                // Check for rare .jhf glitch case:
+                // Any glyph listed as zero-width (same left and right bound)
+                // should be only vertical lines such that all verts should
+                // have x == 0.
+                if ( hg->width == 0 && x != 0 )
+                    width_err++;
+            }
+            // end draw path
+            printf("\n");
+        }
+        if ( width_err ) {
+            printf("\t\tWARNING! '%c' glyph(%d) likely bogus width=%d!\n",
+                    c, c, hg->width);
+            errs++;
+        }
 
-	// note: to render a string of character glyphs left-to-right,
-	// advance the x_render_pos by the width of each glyph here, e.g.:
-	//
-	// x_render_pos += hg->width;
+        // note: to render a string of character glyphs left-to-right,
+        // advance the x_render_pos by the width of each glyph here, e.g.:
+        //
+        // x_render_pos += hg->width;
     }
 
     // destroy the hershey_font

@@ -32,8 +32,8 @@ main( int argc, char **argv )
     const char *fontname = "rowmans";
     struct hershey_font *hf = hershey_font_load(fontname);
     if ( !hf ) {
-	perror(fontname);
-	return 1;
+        perror(fontname);
+        return 1;
     }
 
     //
@@ -45,34 +45,34 @@ main( int argc, char **argv )
     const char *p;
     for ( p=render_text; *p; p++ ) {
 
-	// get the character c to be rendered
-	int c = *p;
+        // get the character c to be rendered
+        int c = *p;
 
-	// get the hershey_glyph for character c
-	// and check whether there actually is a glyph for this character
-	struct hershey_glyph *hg = hershey_font_glyph(hf, c);
-	if ( hg->npaths == 0 )
-	    continue;
+        // get the hershey_glyph for character c
+        // and check whether there actually is a glyph for this character
+        struct hershey_glyph *hg = hershey_font_glyph(hf, c);
+        if ( hg->npaths == 0 )
+            continue;
 
-	printf("# %c\n", c);
+        printf("# %c\n", c);
 
-	// walk the paths-list for this glyph
-	struct hershey_path *hp;
-	for ( hp=hg->paths; hp; hp=hp->next ) {
-	    // begin draw path
-	    printf("\t");
-	    int i;
-	    for ( i=0; i<hp->nverts; i++ ) {
-		short x = hp->verts[i].x + x_render_pos;
-		short y = hp->verts[i].y;
-		printf(" {%d,%d}", x, y);
-	    }
-	    // end draw path
-	    printf("\n");
-	}
+        // walk the paths-list for this glyph
+        struct hershey_path *hp;
+        for ( hp=hg->paths; hp; hp=hp->next ) {
+            // begin draw path
+            printf("\t");
+            int i;
+            for ( i=0; i<hp->nverts; i++ ) {
+                short x = hp->verts[i].x + x_render_pos;
+                short y = hp->verts[i].y;
+                printf(" {%d,%d}", x, y);
+            }
+            // end draw path
+            printf("\n");
+        }
 
-	// advance the x_render_pos by the width of this glyph
-	x_render_pos += hg->width;
+        // advance the x_render_pos by the width of this glyph
+        x_render_pos += hg->width;
     }
 
     //

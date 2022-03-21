@@ -30,13 +30,13 @@ def hershey_val(character):
 def read_hershey_glyph(f):
     line = ''
     while ( line == '' ):
-	line = f.readline()
-	if (not line) or line == '\x1a':	# eof
-	    return False
-	line = line.rstrip()
+        line = f.readline()
+        if (not line) or line == '\x1a':  # eof
+            return False
+        line = line.rstrip()
 
     # read a Hershey format line
-    glyphnum = int(line[0:5])		# glyphnum (junk in some .jhf files)
+    glyphnum = int(line[0:5])  # glyphnum (junk in some .jhf files)
     nverts = int(line[5:8]) - 1
     leftpos = hershey_val(line[8])
     rightpos = hershey_val(line[9])
@@ -45,13 +45,13 @@ def read_hershey_glyph(f):
 
     # join split lines in the Hershey data
     while ( nverts * 2 > nvertchars ):
-	nextline = f.readline().rstrip()
-	line += nextline
-	vertchars += nextline
-	nvertchars = len(vertchars)
+        nextline = f.readline().rstrip()
+        line += nextline
+        vertchars += nextline
+        nvertchars = len(vertchars)
     if ( nverts * 2 != nvertchars ):
-	print >> sys.stderr, "hershey2olfont: Hershey format parse error (nvertchars=%d not %d)" % (nvertchars, nverts*2)
-	sys.exit(1)
+        sys.stderr.write(f"hershey2olfont: Hershey format parse error (nvertchars={nvertchars} not {nverts*2})")
+        sys.exit(1)
 
     # emit the fixed (joined) line
     global output
@@ -65,7 +65,7 @@ def read_hershey_glyph(f):
 #
 
 if ( len(sys.argv) != 3 ):
-    print >> sys.stderr, "usage: hershey-jhf-fix-linebreaks.py in.jhf out.jhf   (same filename is ok)"
+    sys.stderr.write("usage: hershey-jhf-fix-linebreaks.py in.jhf out.jhf   (same filename is ok)")
     sys.exit(1)
 
 hershey_in = sys.argv[1]
@@ -73,7 +73,7 @@ hershey_out = sys.argv[2]
 
 with open(hershey_in) as f:
     while read_hershey_glyph(f):
-	pass
+        pass
     f.close()
 
 fd = open(hershey_out,"w")
