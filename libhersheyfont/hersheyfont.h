@@ -38,7 +38,7 @@ struct hershey_glyph {
 };
 
 struct hershey_font {
-    struct hershey_glyph    glyphs[256];    /* indexed by ASCII value */
+    struct hershey_glyph    glyphs[65536];    /* indexed by unicode value */
 };
 
 

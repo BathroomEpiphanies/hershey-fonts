@@ -19,12 +19,14 @@
 #include <hersheyfont.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistr.h>
+#include <uniname.h>
 #include <getopt.h>
 #include <stdlib.h>
 
 int sample_sheet_mode = 1;
 
-char *render_text;
+unsigned char *render_text;
 
 void
 usage()
@@ -43,8 +45,6 @@ usage()
 "    hershey-font-gnuplot gothiceng 'Calligraphy'  | gnuplot -p\n"
 "    hershey-font-gnuplot -T 'png crop' scriptc 'Nice Text' | gnuplot > out.png\n"
         );
-
-
 }
 
 int
@@ -99,7 +99,7 @@ main( int argc, char **argv )
 
     int terminal_width, terminal_height;
 
-    char render_text_buf[256];
+    unsigned char render_text_buf[256];
     if ( sample_sheet_mode ) {
         int i;
         for ( i=0; i<256-32; i++ )
@@ -108,7 +108,7 @@ main( int argc, char **argv )
         terminal_width = 16 * gnuplot_height;
         terminal_height = 8 * gnuplot_height;
     } else {
-        render_text = argv[optind++];
+        render_text = (unsigned char *)argv[optind++];
         terminal_width = 16 * gnuplot_height;
         terminal_height = gnuplot_height;
     }
@@ -137,13 +137,12 @@ main( int argc, char **argv )
     int x_render_pos = 0;
     int y_render_pos = 8;
 
-    const char *p;
-    for ( p=render_text; *p; p++ ) {
 
-        // get the character c to be rendered
-        int c = *((unsigned char *)p);
-
-        // get the hershey_glyph for ASCII character c
+    // iterate through characters c to render
+    const unsigned char *p;
+    ucs4_t c;
+    for ( p=u8_next(&c, render_text); p; p=u8_next(&c, p) ) {
+        // get the hershey_glyph for character c
         struct hershey_glyph *hg = hershey_font_glyph(hf, c);
 
         // check whether there actually is a glyph for this character

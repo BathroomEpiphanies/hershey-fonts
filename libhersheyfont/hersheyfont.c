@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 #ifndef HERSHEY_FONTS_DIR
-// #define HERSHEY_FONTS_DIR "/usr/local/share/hershey-fonts"
+// #define HERSHEY_FONTS_DIR "/usr/share/hershey-fonts"
 #endif
 
 #undef DEBUG
